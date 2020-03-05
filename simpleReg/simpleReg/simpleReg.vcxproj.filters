@@ -18,12 +18,12 @@
     <ClCompile Include="simpleReg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="LinearRegression.cpp">
+    <ClCompile Include="LinearReg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LinearRegression.h">
+    <ClInclude Include="LinearReg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

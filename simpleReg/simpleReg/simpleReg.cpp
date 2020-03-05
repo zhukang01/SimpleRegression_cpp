@@ -5,7 +5,14 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	int x[] = {1,2,3};
+	int y[] = { 2,3,4 };
+
+
+	
+	std::cout << x << std::endl;
+
+
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
