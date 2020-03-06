@@ -151,11 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LinearReg.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="simpleReg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LinearReg.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
