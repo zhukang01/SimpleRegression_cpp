@@ -120,7 +120,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-//#include "Matrix.h"
+#include "Matrix.h"
 
 using namespace std;
 
@@ -158,52 +158,52 @@ using namespace std;
 //	cout << "(" << real << "," << imag << "i)" << endl;
 //}
 
-class Matrix
-{
-private:
-	double a[2][2];
-
-public:
-	Matrix();
-	Matrix(double x, double y, double c, double d);
-	~Matrix();
-	void Show();
-	Matrix operator*(const Matrix & m)const;
-};
-
-Matrix::~Matrix()
-{
-	cout << "des" << endl;
-}
-
-Matrix Matrix::operator*(const Matrix& m)const
-{
-	//cout<<&m;
-	Matrix temp(0,0,0,0);
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
-			for (int k = 0; k < 2; k++) {
-				temp.a[i][j] += (a[i][k]) * m.a[k][j];
-			}
-		}
-	}
-	cout << &temp << endl;;
-	//temp.Show();
-	return temp;
-}
-
-Matrix::Matrix(double x, double y, double c, double d)
-{
-	a[0][0] = x;
-	a[0][1] = y;
-	a[1][0] = c;
-	a[1][1] = d;
-}
-
-void Matrix::Show()
-{
-	cout << a[0][0] << a[0][1] << a[1][0] << a[1][1] << endl;
-}
+//class Matrix
+//{
+//private:
+//	double a[2][2];
+//
+//public:
+//	Matrix();
+//	Matrix(double x, double y, double c, double d);
+//	~Matrix();
+//	void Show();
+//	Matrix operator*(const Matrix & m)const;
+//};
+//
+//Matrix::~Matrix()
+//{
+//	cout << "des" << endl;
+//}
+//
+//Matrix Matrix::operator*(const Matrix& m)const
+//{
+//	//cout<<&m;
+//	Matrix temp(0,0,0,0);
+//	for (int i = 0; i < 2; i++) {
+//		for (int j = 0; j < 2; j++) {
+//			for (int k = 0; k < 2; k++) {
+//				temp.a[i][j] += (a[i][k]) * m.a[k][j];
+//			}
+//		}
+//	}
+//	cout << &temp << endl;;
+//	//temp.Show();
+//	return temp;
+//}
+//
+//Matrix::Matrix(double x, double y, double c, double d)
+//{
+//	a[0][0] = x;
+//	a[0][1] = y;
+//	a[1][0] = c;
+//	a[1][1] = d;
+//}
+//
+//void Matrix::Show()
+//{
+//	cout << a[0][0] << a[0][1] << a[1][0] << a[1][1] << endl;
+//}
 
 int main()
 {
@@ -226,14 +226,18 @@ int main()
 
 	}*/
 
-	Matrix A = Matrix(1,2,3,4);
-	//cin >> A;
-	Matrix b = Matrix(2,3,4,5);
-	//cin >> b;
-	//Matrix x = Matrix::Solve(A, b);
-	Matrix x = A * b;
+	Matrix x(2, 2);
+	Matrix y(2, 1);
 
-	x.Show();
+	cin >> x;
+	cin >> y;
+
+	cout << "&:x" << &x << endl;
+	cout << "&:y" << &y << endl;
+
+	Matrix res = (x * y);
+	cout << "%res:" << &res << endl;
+	res.Show();
 
 	
 	//Complex c1(3, 4), c2(5, -10), c3;

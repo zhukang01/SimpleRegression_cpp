@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __MATRIX_CLL_H__
+#define __MATRIX_CCL_H__
 #include "pch.h"
 
 class Matrix
@@ -13,7 +15,7 @@ public:
 	Matrix(int, int);	
 	Matrix(int, int, double);//预配分空间	
 	virtual ~Matrix();//析构函数应当是虚函数，除非此类不用做基类	
-	Matrix& operator=(const Matrix&);//矩阵的复制	
+	//Matrix& operator=(const Matrix&);//矩阵的复制	
 	Matrix& operator=(double *);//将数组的值传给矩阵	
 	Matrix& operator+=(const Matrix&);//矩阵的+=操作	
 	Matrix& operator-=(const Matrix&);// -=	
@@ -32,7 +34,9 @@ public:
 	static Matrix T(const Matrix & m);//矩阵转置的实现,且不改变矩阵	
 	Matrix gaussianEliminate();//高斯消元法	
 	friend std::istream& operator>>(std::istream&, Matrix&);//实现矩阵的输入
+	//friend Matrix operator*(const Matrix& x, const Matrix& y);
 
 };
 
 
+#endif

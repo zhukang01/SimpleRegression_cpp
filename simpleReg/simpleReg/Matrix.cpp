@@ -22,7 +22,7 @@ void Matrix::initialize() //初始化矩阵大小
 //全为0的矩阵
 Matrix::Matrix(int a, int b)
 {
-	rows_num = a;
+ 	rows_num = a;
 	cols_num = b;
 	initialize();
 	for (int i = 0; i < rows_num; i++) {
@@ -35,6 +35,7 @@ Matrix::Matrix(int a, int b)
 //值全为value的矩阵
 Matrix::Matrix(int a, int b, double value)
 {
+
 	rows_num = a;
 	cols_num = b;
 	initialize();
@@ -48,6 +49,10 @@ Matrix::Matrix(int a, int b, double value)
 //析构函数
 Matrix::~Matrix()
 {
+	//cout << "a matrix" << rows_num << "+" << cols_num << "deconsturcted" << endl;
+	cout << "Desturct this matrix:" << endl;
+	this->Show();
+	
 	for (int i = 0; i < rows_num; i++) {
 		delete[] p[i];
 	}
@@ -55,29 +60,31 @@ Matrix::~Matrix()
 }
 
 //矩阵复制
-Matrix& Matrix::operator=(const Matrix& m)
-{
-	if (this == &m) { return *this; }
-	if (rows_num != m.rows_num || cols_num != m.cols_num) {
-		for (int i = 0; i < cols_num; i++) {
-			delete[] p[i];
-		}
-		delete p;
-
-		rows_num = m.rows_num;
-		cols_num = m.cols_num;
-		initialize();
-	}
-
-	for (int i = 0; i < rows_num; i++) {
-		for (int j = 0; j < cols_num; j++) {
-			p[i][j] = m.p[i][j];
-		}
-	}
-
-	return *this;
-
-}
+//Matrix& Matrix::operator=(const Matrix& m)
+//{
+//	cout << &m;
+//	if (this == &m) { return *this; }
+//	if (rows_num != m.rows_num || cols_num != m.cols_num) {
+//		for (int i = 0; i < cols_num; i++) {
+//			delete[] p[i];
+//		}
+//		delete p;
+//
+//		rows_num = m.rows_num;
+//		cols_num = m.cols_num;
+//		initialize();
+//	}
+//
+//	for (int i = 0; i < rows_num; i++) {
+//		for (int j = 0; j < cols_num; j++) {
+//			p[i][j] = m.p[i][j];
+//		}
+//	}
+//
+//	//cout << this << endl;
+//	return *this;
+//
+//}
 
 //将数组的值传给matrix（要求矩阵大小已经声明
 Matrix& Matrix::operator=(double* a)
@@ -135,9 +142,10 @@ Matrix& Matrix::operator/=(const Matrix& m)
 }
 
 //矩阵乘法
-Matrix Matrix::operator*(const Matrix & m)const
+Matrix Matrix::operator*(const Matrix& m)const
 {
-	Matrix temp(rows_num, m.cols_num, 0.0);
+	//cout<<&m;
+	static Matrix temp(rows_num, m.cols_num, 0.0);
 	for (int i = 0; i < rows_num; i++) {
 		for (int j = 0; j < m.cols_num; j++) {
 			for (int k = 0; k < cols_num; k++) {
@@ -145,15 +153,48 @@ Matrix Matrix::operator*(const Matrix & m)const
 			}
 		}
 	}
+	cout << &temp << endl;;
+	//temp.Show();
 	return temp;
 }
 
 //求解线性方程组
 //暂不定义
-/*Matrix Matrix::Solve(const Matrix& a, const Matrix& b)
+Matrix Matrix::Solve(const Matrix& A, const Matrix& b)
 {
-	return a;
-}*/
+	//高斯消去法实现Ax=b的方程求解	
+	for (int i = 0; i < A.rows_num; i++) {		
+		if (A.p[i][i] == 0) { 			
+			cout << "请重新输入" << endl;		
+		}		
+		for (int j = i + 1; j < A.rows_num; j++) {			
+			for (int k = i + 1; k < A.cols_num; k++) {				
+				A.p[j][k] -= A.p[i][k] * (A.p[j][i] / A.p[i][i]);				
+				if (abs(A.p[j][k]) < EPS)
+					A.p[j][k] = 0;
+			}			
+			b.p[j][0] -= b.p[i][0] * (A.p[j][i] / A.p[i][i]);			
+			if (abs(A.p[j][0]) < EPS)
+				A.p[j][0] = 0;			
+			A.p[j][i] = 0;		
+		}	
+	} 	
+	// 反向代换	
+	Matrix x(b.rows_num, 1);	
+	x.p[x.rows_num - 1][0] = b.p[x.rows_num - 1][0] / A.p[x.rows_num - 1][x.rows_num - 1];	
+	if (abs(x.p[x.rows_num - 1][0]) < EPS)		
+		x.p[x.rows_num - 1][0] = 0;	
+	for (int i = x.rows_num - 2; i >= 0; i--) {		
+		double sum = 0;		
+		for (int j = i + 1; j < x.rows_num; j++) {			
+			sum += A.p[i][j] * x.p[j][0];		
+		}		
+		x.p[i][0] = (b.p[i][0] - sum) / A.p[i][i];		
+		if (abs(x.p[i][0]) < EPS)			
+			x.p[i][0] = 0;	
+	} 	
+	return x;
+}
 
 
 //矩阵显示
@@ -248,13 +289,28 @@ istream& operator>>(std::istream& x, Matrix& m)
 {
 	for (int i = 0; i < m.rows_num; i++) {
 		for (int j = 0; j < m.cols_num; j++) {
+			cout << "The matrix's size is " << m.rows_num << "*" << m.cols_num << endl;
+			cout << "Please enter the data for [" << i << "]" << "[" << j << "]" << endl;
 			x >> m.p[i][j];
 		}
 	}
 	return x;
 }
 
-
+////矩阵乘法
+//Matrix operator* (const Matrix& x, const Matrix& y)
+//{
+//	Matrix temp(x.rows_num, y.cols_num, 0.0);
+//	for (int i = 0; i < x.rows_num; i++) {
+//		for (int j = 0; j < y.cols_num; j++) {
+//			for (int k = 0; k < x.cols_num; k++) {
+//				temp.p[i][j] += (x.p[i][k]) * y.p[k][j];
+//			}
+//		}
+//	}
+//	cout << &temp;
+//	return temp;
+//}
 
 
 
