@@ -8,19 +8,20 @@ class Matrix
 {
 private:
 	int rows_num, cols_num;
-	double** p;
+	std::vector<std::vector<double>> p;
 	void initialize();
 
 public:
 	Matrix(int, int);	
 	Matrix(int, int, double);//预配分空间	
 	virtual ~Matrix();//析构函数应当是虚函数，除非此类不用做基类	
-	//Matrix& operator=(const Matrix&);//矩阵的复制	
+	Matrix& operator=(const Matrix&);//矩阵的复制	
 	Matrix& operator=(double *);//将数组的值传给矩阵	
 	Matrix& operator+=(const Matrix&);//矩阵的+=操作	
 	Matrix& operator-=(const Matrix&);// -=	
 	Matrix& operator*=(const Matrix&);// *=	
 	Matrix& operator/=(const Matrix&);// /=
+	Matrix& operator/=(const double);
 	Matrix operator*(const Matrix & m)const;	
 	static Matrix Solve(const Matrix&, const Matrix&);//求解线性方程组Ax=b	
 	void Show() const;//矩阵显示	
@@ -35,6 +36,8 @@ public:
 	Matrix gaussianEliminate();//高斯消元法	
 	friend std::istream& operator>>(std::istream&, Matrix&);//实现矩阵的输入
 	//friend Matrix operator*(const Matrix& x, const Matrix& y);
+	friend Matrix operator-(const Matrix&, const Matrix&);
+	void clear();
 
 };
 

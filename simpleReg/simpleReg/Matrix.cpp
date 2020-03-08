@@ -12,11 +12,12 @@ const double EPS = 1e-10;
 void Matrix::initialize() //初始化矩阵大小	
 {
 	//new一个存放double型指针的数组空间，存行数个，指针赋给p
-	p = new double*[rows_num];
-	for (int i = 0; i < rows_num; ++i) {
-		//数组的每个指针，指向new出来的一个大小为列数的数组
-		p[i] = new double[cols_num];//为p[i]进行动态内存分配，大小为cols	
-	}
+	//p = new double* [rows_num];
+	//for (int i = 0; i < rows_num; i++) {
+	//	//数组的每个指针，指向new出来的一个大小为列数的数组
+	//	p[i] = new double[cols_num];//为p[i]进行动态内存分配，大小为cols	
+	//}
+	p.resize(rows_num, std::vector<double>(cols_num));
 }
 
 //全为0的矩阵
@@ -49,42 +50,41 @@ Matrix::Matrix(int a, int b, double value)
 //析构函数
 Matrix::~Matrix()
 {
-	//cout << "a matrix" << rows_num << "+" << cols_num << "deconsturcted" << endl;
-	cout << "Desturct this matrix:" << endl;
-	this->Show();
+	//cout << "Desturct this matrix:" << endl;
+	//this->Show();
 	
-	for (int i = 0; i < rows_num; i++) {
-		delete[] p[i];
-	}
-	delete p;
+	//for (int i = 0; i < rows_num; i++) {
+	//	delete[] p[i];
+	//}
+	//delete p;
 }
 
 //矩阵复制
-//Matrix& Matrix::operator=(const Matrix& m)
-//{
-//	cout << &m;
-//	if (this == &m) { return *this; }
-//	if (rows_num != m.rows_num || cols_num != m.cols_num) {
-//		for (int i = 0; i < cols_num; i++) {
-//			delete[] p[i];
-//		}
-//		delete p;
-//
-//		rows_num = m.rows_num;
-//		cols_num = m.cols_num;
-//		initialize();
-//	}
-//
-//	for (int i = 0; i < rows_num; i++) {
-//		for (int j = 0; j < cols_num; j++) {
-//			p[i][j] = m.p[i][j];
-//		}
-//	}
-//
-//	//cout << this << endl;
-//	return *this;
-//
-//}
+Matrix& Matrix::operator=(const Matrix& m)
+{
+	//cout << &m;
+	if (this == &m) { return *this; }
+	if (rows_num != m.rows_num || cols_num != m.cols_num) {
+		/*for (int i = 0; i < cols_num; i++) {
+			delete[] p[i];
+		}
+		delete p;*/
+
+		rows_num = m.rows_num;
+		cols_num = m.cols_num;
+		initialize();
+	}
+
+	for (int i = 0; i < rows_num; i++) {
+		for (int j = 0; j < cols_num; j++) {
+			p[i][j] = m.p[i][j];
+		}
+	}
+
+	//cout << this << endl;
+	return *this;
+
+}
 
 //将数组的值传给matrix（要求矩阵大小已经声明
 Matrix& Matrix::operator=(double* a)
@@ -141,11 +141,21 @@ Matrix& Matrix::operator/=(const Matrix& m)
 	return *this;
 }
 
+Matrix& Matrix::operator/=(const double x)
+{
+	for (int i = 0; i < rows_num; i++) {
+		for (int j = 0; j < cols_num; j++) {
+			p[i][j] /= x;
+		}
+	}
+	return *this;
+}
+
 //矩阵乘法
 Matrix Matrix::operator*(const Matrix& m)const
 {
 	//cout<<&m;
-	static Matrix temp(rows_num, m.cols_num, 0.0);
+	Matrix temp(rows_num, m.cols_num, 0.0);
 	for (int i = 0; i < rows_num; i++) {
 		for (int j = 0; j < m.cols_num; j++) {
 			for (int k = 0; k < cols_num; k++) {
@@ -153,48 +163,48 @@ Matrix Matrix::operator*(const Matrix& m)const
 			}
 		}
 	}
-	cout << &temp << endl;;
+	//cout << &temp << endl;;
 	//temp.Show();
 	return temp;
 }
 
 //求解线性方程组
 //暂不定义
-Matrix Matrix::Solve(const Matrix& A, const Matrix& b)
-{
-	//高斯消去法实现Ax=b的方程求解	
-	for (int i = 0; i < A.rows_num; i++) {		
-		if (A.p[i][i] == 0) { 			
-			cout << "请重新输入" << endl;		
-		}		
-		for (int j = i + 1; j < A.rows_num; j++) {			
-			for (int k = i + 1; k < A.cols_num; k++) {				
-				A.p[j][k] -= A.p[i][k] * (A.p[j][i] / A.p[i][i]);				
-				if (abs(A.p[j][k]) < EPS)
-					A.p[j][k] = 0;
-			}			
-			b.p[j][0] -= b.p[i][0] * (A.p[j][i] / A.p[i][i]);			
-			if (abs(A.p[j][0]) < EPS)
-				A.p[j][0] = 0;			
-			A.p[j][i] = 0;		
-		}	
-	} 	
-	// 反向代换	
-	Matrix x(b.rows_num, 1);	
-	x.p[x.rows_num - 1][0] = b.p[x.rows_num - 1][0] / A.p[x.rows_num - 1][x.rows_num - 1];	
-	if (abs(x.p[x.rows_num - 1][0]) < EPS)		
-		x.p[x.rows_num - 1][0] = 0;	
-	for (int i = x.rows_num - 2; i >= 0; i--) {		
-		double sum = 0;		
-		for (int j = i + 1; j < x.rows_num; j++) {			
-			sum += A.p[i][j] * x.p[j][0];		
-		}		
-		x.p[i][0] = (b.p[i][0] - sum) / A.p[i][i];		
-		if (abs(x.p[i][0]) < EPS)			
-			x.p[i][0] = 0;	
-	} 	
-	return x;
-}
+//Matrix Matrix::Solve(const Matrix& A, const Matrix& b)
+//{
+//	//高斯消去法实现Ax=b的方程求解	
+//	for (int i = 0; i < A.rows_num; i++) {		
+//		if (A.p[i][i] == 0) { 			
+//			cout << "请重新输入" << endl;		
+//		}		
+//		for (int j = i + 1; j < A.rows_num; j++) {			
+//			for (int k = i + 1; k < A.cols_num; k++) {				
+//				A.p[j][k] -= A.p[i][k] * (A.p[j][i] / A.p[i][i]);				
+//				if (abs(A.p[j][k]) < EPS)
+//					A.p[j][k] = 0;
+//			}			
+//			b.p[j][0] -= b.p[i][0] * (A.p[j][i] / A.p[i][i]);			
+//			if (abs(A.p[j][0]) < EPS)
+//				A.p[j][0] = 0;			
+//			A.p[j][i] = 0;		
+//		}	
+//	} 	
+//	// 反向代换	
+//	Matrix x(b.rows_num, 1);	
+//	x.p[x.rows_num - 1][0] = b.p[x.rows_num - 1][0] / A.p[x.rows_num - 1][x.rows_num - 1];	
+//	if (abs(x.p[x.rows_num - 1][0]) < EPS)		
+//		x.p[x.rows_num - 1][0] = 0;	
+//	for (int i = x.rows_num - 2; i >= 0; i--) {		
+//		double sum = 0;		
+//		for (int j = i + 1; j < x.rows_num; j++) {			
+//			sum += A.p[i][j] * x.p[j][0];		
+//		}		
+//		x.p[i][0] = (b.p[i][0] - sum) / A.p[i][i];		
+//		if (abs(x.p[i][0]) < EPS)			
+//			x.p[i][0] = 0;	
+//	} 	
+//	return x;
+//}
 
 
 //矩阵显示
@@ -212,7 +222,7 @@ void Matrix::Show()const
 //行变换,输入从0开始
 void Matrix::swapRows(int a, int b)
 {
-	double* temp = p[a];
+	std::vector<double> temp = p[a];
 	p[a] = p[b];
 	p[b] = temp;
 }
@@ -275,6 +285,7 @@ Matrix Matrix::T(const Matrix& m)
 	return temp;
 }
 
+
 //高斯消元
 //暂不定义
 /*
@@ -311,6 +322,29 @@ istream& operator>>(std::istream& x, Matrix& m)
 //	cout << &temp;
 //	return temp;
 //}
+
+//矩阵减法
+Matrix operator-(const Matrix& x, const Matrix& y)
+{
+	Matrix temp(x.rows_num, y.cols_num, 0.0);
+	for (int i = 0; i < x.rows_num; i++) {
+		for (int j = 0; j < y.cols_num; j++) {
+			temp.p[i][j] = x.p[i][j] - y.p[i][j];
+		}
+	}
+
+	return temp;
+}
+
+//清零
+void Matrix::clear()
+{
+	for (int i = 0; i < rows_num; i++) {
+		for (int j = 0; j < cols_num; j++) {
+			p[i][j] = 0;
+		}
+	}
+}
 
 
 

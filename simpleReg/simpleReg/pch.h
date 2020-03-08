@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
+#include <vector>
 
 
 

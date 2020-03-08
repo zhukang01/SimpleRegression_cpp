@@ -158,56 +158,10 @@ using namespace std;
 //	cout << "(" << real << "," << imag << "i)" << endl;
 //}
 
-//class Matrix
-//{
-//private:
-//	double a[2][2];
-//
-//public:
-//	Matrix();
-//	Matrix(double x, double y, double c, double d);
-//	~Matrix();
-//	void Show();
-//	Matrix operator*(const Matrix & m)const;
-//};
-//
-//Matrix::~Matrix()
-//{
-//	cout << "des" << endl;
-//}
-//
-//Matrix Matrix::operator*(const Matrix& m)const
-//{
-//	//cout<<&m;
-//	Matrix temp(0,0,0,0);
-//	for (int i = 0; i < 2; i++) {
-//		for (int j = 0; j < 2; j++) {
-//			for (int k = 0; k < 2; k++) {
-//				temp.a[i][j] += (a[i][k]) * m.a[k][j];
-//			}
-//		}
-//	}
-//	cout << &temp << endl;;
-//	//temp.Show();
-//	return temp;
-//}
-//
-//Matrix::Matrix(double x, double y, double c, double d)
-//{
-//	a[0][0] = x;
-//	a[0][1] = y;
-//	a[1][0] = c;
-//	a[1][1] = d;
-//}
-//
-//void Matrix::Show()
-//{
-//	cout << a[0][0] << a[0][1] << a[1][0] << a[1][1] << endl;
-//}
 
 int main()
 {
-	/*int samp_num = 5;
+	int samp_num = 5;
 	int fea_num = 1;
 	int iteration = 50;
 	double res = 0;
@@ -215,29 +169,46 @@ int main()
 	
 	Matrix x(samp_num, fea_num);
 	Matrix y(samp_num, 1);
-	Matrix theta(samp_num, 1);
-
-	cin>>x;
-
-	for (int iter = 0; iter < iteration; iter++) {
-		x
-
-
-
-	}*/
-
-	Matrix x(2, 2);
-	Matrix y(2, 1);
+	Matrix theta(fea_num, 1, 1);
 
 	cin >> x;
 	cin >> y;
 
-	cout << "&:x" << &x << endl;
-	cout << "&:y" << &y << endl;
 
-	Matrix res = (x * y);
-	cout << "%res:" << &res << endl;
-	res.Show();
+	for (int iter = 0; iter < iteration; iter++) {
+
+		Matrix temp = (x*theta - y);
+		Matrix tempt = Matrix::T(temp);
+
+		double cost = (tempt * temp).Point(0,0);
+		cost /= (2 * samp_num);
+		
+		cout << "iter:" << iter << " " << "cost:" << cost << endl;
+		cost = 0;
+
+		Matrix xt = Matrix::T(x);
+		Matrix diff = xt * temp;
+
+		diff /= (samp_num / alpha);
+		theta -= diff;
+
+	}
+
+	cout << "Result:";
+	theta.Show();
+
+	//Matrix x(2, 2);
+	//Matrix y(2, 1);
+	//
+	//cin >> x;
+	//cin >> y;
+	//
+	//cout << "&:x" << &x << endl;
+	//cout << "&:y" << &y << endl;
+	//
+	//Matrix res = (x * y);
+	//cout << "%res:" << &res << endl;
+	//x.Show();
 
 	
 	//Complex c1(3, 4), c2(5, -10), c3;
