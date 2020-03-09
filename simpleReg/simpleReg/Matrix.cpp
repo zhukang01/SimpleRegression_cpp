@@ -3,6 +3,7 @@
 //原文链接：https ://blog.csdn.net/m0_37772174/article/details/83018940
 #include "pch.h"
 #include "Matrix.h"
+#include<math.h>
 
 using std::endl;
 using std::cout;
@@ -227,13 +228,6 @@ void Matrix::swapRows(int a, int b)
 	p[b] = temp;
 }
 
-//求行列式
-//暂不定义
-/*double Matrix::det()
-{
-
-}*/
-
 //取某一点值
 double Matrix::Point(int a,int b)const
 {
@@ -241,11 +235,81 @@ double Matrix::Point(int a,int b)const
 }
 
 //求逆矩阵
-//暂不定义
-/*Matrix Matrix::inv(Matrix A)
+//A前提为方针
+Matrix Matrix::inv(Matrix A)
 {
+	//高斯消元求逆
+	const double eps = 1e-6;
+	int dim = A.rows_num;
+	Matrix temp(2 * dim, 2 * dim);
+	for (int i = 0; i < dim; i++) {
+		for (int j = 0; j < 2 * dim; j++) {
+			if (j < dim)
+			{
+				temp.p[i][j] = A.p[i][j];
+			}
+			else
+			{
+				temp.p[i][j] = j - dim == i ? 1 : 0;
+			}
+		}
+	}
 
-}*/
+	for (int i = 0; i < dim; i++)
+	{
+		if (abs(temp.p[i][i]) < eps)//若mat[i,i]为0，则往下找一个不为0的行，加到第i行
+		{
+			int j;
+			for (j = i + 1; j < dim; j++)
+			{
+				if (abs(temp.p[j][i]) > eps) break;
+			}
+			//if (j == dim) return temp;
+			for (int r = i; r < 2 * dim; r++)
+			{
+				temp.p[i][r] += temp.p[j][r];
+			}
+		}
+		double ep = temp.p[i][i];
+		//将temp[i,i]变为1
+		for (int r = i; r < 2 * dim; r++)
+		{
+			temp.p[i][r] /= ep;
+		}
+
+		for (int j = i + 1; j < dim; j++)
+		{
+			double e = -1 * (temp.p[j][i] / temp.p[i][i]);
+			for (int r = i; r < 2 * dim; r++)
+			{
+				temp.p[j][r] += e * temp.p[i][r];
+			}
+		}
+	}
+
+	for (int i = dim - 1; i >= 0; i--)
+	{
+		for (int j = i - 1; j >= 0; j--)
+		{
+			double e = -1 * (temp.p[j][i] / temp.p[i][i]);
+			for (int r = i; r < 2 * dim; r++)
+			{
+				temp.p[j][r] += e * temp.p[i][r];
+			}
+		}
+	}
+
+	Matrix result(dim, dim);
+	for (int i = 0; i < dim; i++)
+	{
+		for (int r = dim; r < 2 * dim; r++)
+		{
+			result.p[i][r - dim] = temp.p[i][r];
+		}
+	}
+	return result;
+
+}
 
 //单位矩阵
 Matrix Matrix::eye(int a)
@@ -285,15 +349,6 @@ Matrix Matrix::T(const Matrix& m)
 	return temp;
 }
 
-
-//高斯消元
-//暂不定义
-/*
-Matrix Matrix::gaussianEliminate()
-{
-	
-}
-*/
 
 //矩阵的输入
 istream& operator>>(std::istream& x, Matrix& m)
@@ -344,6 +399,13 @@ void Matrix::clear()
 			p[i][j] = 0;
 		}
 	}
+}
+
+Matrix Matrix::augmentM(const Matrix& x)
+{
+	Matrix temp(x.rows_num, x.cols_num + 1);
+
+	return temp;
 }
 
 

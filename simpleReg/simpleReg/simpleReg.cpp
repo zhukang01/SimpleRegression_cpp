@@ -161,6 +161,8 @@ using namespace std;
 
 int main()
 {
+	/*//求解线性方程AX=y
+	//通过梯度下降
 	int samp_num = 5;
 	int fea_num = 1;
 	int iteration = 50;
@@ -197,68 +199,41 @@ int main()
 	cout << "Result:";
 	theta.Show();
 
-	//Matrix x(2, 2);
-	//Matrix y(2, 1);
-	//
+	return 0;*/
+	
+
+
+	//最小二乘拟合多项式
+	//过原点的一次式
+
+	//int samp_num = 5;
+	//int fea_num = 1;
+	//double res = 0;
+
+	//Matrix x(samp_num, fea_num);
+	//Matrix y(samp_num, 1);
+
 	//cin >> x;
 	//cin >> y;
 	//
-	//cout << "&:x" << &x << endl;
-	//cout << "&:y" << &y << endl;
-	//
-	//Matrix res = (x * y);
-	//cout << "%res:" << &res << endl;
-	//x.Show();
+	//Matrix theta = Matrix::inv(Matrix::T(x)*x)*Matrix::T(x)*y;
+	//theta.Show();
 
-	
-	//Complex c1(3, 4), c2(5, -10), c3;
-	//c3 = c1 + c2;//运算符+用于复数运算
-	//c3.display();
-	
+	//加bias
+	int samp_num = 5;
+	int fea_num = 1;
+	double res = 0;
+
+	Matrix x(samp_num, fea_num + 1);
+	Matrix y(samp_num, 1);
+
+	cin >> x;
+	cin >> y;
+	Matrix theta = Matrix::inv(Matrix::T(x)*x)*Matrix::T(x)*y;
+	theta.Show();
+
 
 	return 0;
-
-	//vector<vector<double>> x{ {1},{2},{3},{4},{5} };
-	//vector<double> y{ 2, 4, 6, 8, 10 };
-	//vector<double> theta{ 1 };
-	//int iteration = 50;
-	//double res = 0;
-	//double alpha = 0.05;
-	//
-	//for (int iter = 0; iter < iteration; iter++) {
-	//	vector<double> temp;
-	//	temp = matminus(predict(theta, x), y);
-	//	
-	//	for (int i = 0; i < temp.size(); i++) {
-	//		res += (temp.at(i) * temp.at(i));
-	//	}
-	//	
-	//	double cost = res / (2*x.size());
-	//	cout << "iter:" << iter << " " << "cost:" << cost << endl;
-	//	res = 0;
-	//	
-	//	vector<double> diff_temp{ 0 };
-	//	vector<double> xt{1,2,3,4,5};
-	//	
-	//	for (int i = 0; i < xt.size(); i++) {
-	//		diff_temp[0] += xt[i] * temp[i];
-	//	}
-	//
-	//	//cout << diff_temp[0];
-	//	
-	//	//cout << " "<<diff_temp.size()<<endl;
-	//	for (int i = 0; i < diff_temp.size(); i++) {
-	//		diff_temp.at(i) *= alpha;
-	//		diff_temp.at(i) /= x.size();
-	//		theta.at(i) -= diff_temp.at(i);
-	//		//cout << theta.at(i);
-	//	}	
-	//}
-	//
-	//for (auto c : theta) {
-	//	cout << c << endl;
-	//}
-	//return 0;
 }
 
 

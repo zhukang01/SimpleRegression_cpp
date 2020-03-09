@@ -17,6 +17,7 @@ public:
 	virtual ~Matrix();//析构函数应当是虚函数，除非此类不用做基类	
 	Matrix& operator=(const Matrix&);//矩阵的复制	
 	Matrix& operator=(double *);//将数组的值传给矩阵	
+	//Matrix& operator=(double);
 	Matrix& operator+=(const Matrix&);//矩阵的+=操作	
 	Matrix& operator-=(const Matrix&);// -=	
 	Matrix& operator*=(const Matrix&);// *=	
@@ -38,6 +39,7 @@ public:
 	//friend Matrix operator*(const Matrix& x, const Matrix& y);
 	friend Matrix operator-(const Matrix&, const Matrix&);
 	void clear();
+	Matrix augmentM(const Matrix&);//构造增广
 
 };
 
