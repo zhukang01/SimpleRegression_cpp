@@ -158,12 +158,11 @@ using namespace std;
 //	cout << "(" << real << "," << imag << "i)" << endl;
 //}
 
-
 int main()
 {
-	/*//求解线性方程AX=y
+	//求解线性方程AX=y
 	//通过梯度下降
-	int samp_num = 5;
+	/*int samp_num = 5;
 	int fea_num = 1;
 	int iteration = 50;
 	double res = 0;
@@ -171,53 +170,31 @@ int main()
 	
 	Matrix x(samp_num, fea_num);
 	Matrix y(samp_num, 1);
-	Matrix theta(fea_num, 1, 1);
+	//Matrix theta(fea_num, 1, 1);
 
 	cin >> x;
 	cin >> y;
 
-
-	for (int iter = 0; iter < iteration; iter++) {
-
-		Matrix temp = (x*theta - y);
-		Matrix tempt = Matrix::T(temp);
-
-		double cost = (tempt * temp).Point(0,0);
-		cost /= (2 * samp_num);
-		
-		cout << "iter:" << iter << " " << "cost:" << cost << endl;
-		cost = 0;
-
-		Matrix xt = Matrix::T(x);
-		Matrix diff = xt * temp;
-
-		diff /= (samp_num / alpha);
-		theta -= diff;
-
-	}
-
-	cout << "Result:";
-	theta.Show();
-
-	return 0;*/
+	Matrix theta = Matrix::Solve(x, y);
+	theta.Show();*/
 	
 
 
 	//最小二乘拟合多项式
 	//过原点的一次式
+	/*int samp_num = 5;
+	int fea_num = 1;
+	double res = 0;
+	
+	Matrix x(samp_num, fea_num);
+	Matrix y(samp_num, 1);
+	
+	cin >> x;
+	cin >> y;
+	
+	Matrix theta = Matrix::inv(Matrix::T(x)*x)*Matrix::T(x)*y;
+	theta.Show();*/
 
-	//int samp_num = 5;
-	//int fea_num = 1;
-	//double res = 0;
-
-	//Matrix x(samp_num, fea_num);
-	//Matrix y(samp_num, 1);
-
-	//cin >> x;
-	//cin >> y;
-	//
-	//Matrix theta = Matrix::inv(Matrix::T(x)*x)*Matrix::T(x)*y;
-	//theta.Show();
 
 	//加bias
 	int samp_num = 5;

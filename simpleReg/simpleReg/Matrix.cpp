@@ -169,43 +169,33 @@ Matrix Matrix::operator*(const Matrix& m)const
 	return temp;
 }
 
-//求解线性方程组
-//暂不定义
-//Matrix Matrix::Solve(const Matrix& A, const Matrix& b)
-//{
-//	//高斯消去法实现Ax=b的方程求解	
-//	for (int i = 0; i < A.rows_num; i++) {		
-//		if (A.p[i][i] == 0) { 			
-//			cout << "请重新输入" << endl;		
-//		}		
-//		for (int j = i + 1; j < A.rows_num; j++) {			
-//			for (int k = i + 1; k < A.cols_num; k++) {				
-//				A.p[j][k] -= A.p[i][k] * (A.p[j][i] / A.p[i][i]);				
-//				if (abs(A.p[j][k]) < EPS)
-//					A.p[j][k] = 0;
-//			}			
-//			b.p[j][0] -= b.p[i][0] * (A.p[j][i] / A.p[i][i]);			
-//			if (abs(A.p[j][0]) < EPS)
-//				A.p[j][0] = 0;			
-//			A.p[j][i] = 0;		
-//		}	
-//	} 	
-//	// 反向代换	
-//	Matrix x(b.rows_num, 1);	
-//	x.p[x.rows_num - 1][0] = b.p[x.rows_num - 1][0] / A.p[x.rows_num - 1][x.rows_num - 1];	
-//	if (abs(x.p[x.rows_num - 1][0]) < EPS)		
-//		x.p[x.rows_num - 1][0] = 0;	
-//	for (int i = x.rows_num - 2; i >= 0; i--) {		
-//		double sum = 0;		
-//		for (int j = i + 1; j < x.rows_num; j++) {			
-//			sum += A.p[i][j] * x.p[j][0];		
-//		}		
-//		x.p[i][0] = (b.p[i][0] - sum) / A.p[i][i];		
-//		if (abs(x.p[i][0]) < EPS)			
-//			x.p[i][0] = 0;	
-//	} 	
-//	return x;
-//}
+//求解线性方程组Ax=b
+Matrix Matrix::Solve(const Matrix& A, const Matrix& b)
+{
+	Matrix theta(A.cols_num, 1);
+	int iteration = 300;
+	double alpha = 0.005;
+
+	for (int iter = 0; iter < iteration; iter++) {
+
+		Matrix temp = (A*theta - b);
+		Matrix tempt = Matrix::T(temp);
+
+		double cost = (tempt * temp).Point(0, 0);
+		cost /= (2 * A.rows_num);
+
+		cout << "iter:" << iter << " " << "cost:" << cost << endl;
+		cost = 0;
+
+		Matrix xt = Matrix::T(A);
+		Matrix diff = xt * temp;
+
+		diff /= (A.rows_num / alpha);
+		theta -= diff;
+
+	}
+	return theta;
+}
 
 
 //矩阵显示
